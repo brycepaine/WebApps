@@ -1,0 +1,34 @@
+body {
+    background-image: url("https://a8b9696a91de10cc2c20196ef7b687396774edd5.googledrive.com/host/0B0RTlVpNFM-GfkRsWVdJOXJaZkJIQXV5OXRhcDZEVFBfb0ZMak9TOWJhNnFEZ1ZYZ0Y0blU/cherry-blossom-wallpaper-picture-Kfpn.jpg");
+}
+h1{
+    color: $clrMain;
+}
+div.maincontent {
+    color: $clrText;
+
+}
+
+div.myboard{
+    width:20%;
+    padding: 20px;
+    @include background-image(linear-gradient(lighten($clrBg, 30%), $clrBg));
+    margin: 10px;
+    @include border-radius(10px); /*rounded border*/
+    border: 1px solid $clrText;
+    @include box-shadow(rgva(#000,0.7) 0 4px 10px 2px);
+    display: inline-block;
+    .boardtitle {
+        text-align: right;
+
+        word-wrap: break-word;
+        font-size: 1.6em;
+
+        color: $clrMain;
+    }
+}
+
+
+
+
+

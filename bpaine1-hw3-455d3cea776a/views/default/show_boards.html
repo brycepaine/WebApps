@@ -1,0 +1,55 @@
+{{extend 'layout.html'}}
+
+{{from datetime import datetime}}
+
+{{if auth.user_id is None:}}
+
+
+
+    <h1>
+    <div align="right" id="main_login">
+    {{=A('Sign Up', _class='btn btn-warning', _href=URL('default', 'user', args=['register']))}}
+    {{=A('Sign In', _class='btn btn-success', _href=URL('default', 'user', args=['login']))}}
+            <br>
+        <br></div>
+    </h1>
+     {{for board_id in board_list:}}
+        <div class = "myboard">
+            <span class="boardtitle">
+            {{=A(board_id['title'],_href=URL('default', 'show_posts', args=board_id['id'])) }}</span>
+            <ul class="boardlist">
+
+            </ul>
+        </div>
+    {{pass}}
+
+{{else:}}
+
+
+
+<h1></h1>
+<div class = "buttons">
+<a class="btn btn-success" href="add_board.html">Add Board</a>
+
+
+<div style="display: inline-block; float:right;">
+{{=A('Logout', _class='btn btn-success', _href=URL('default', 'user', args=['logout']))}}
+</div>
+
+</div>
+
+        <br>
+        <br>
+
+{{for board_id in board_list:}}
+    <div class = "myboard" >
+        <span class="boardtitle" >
+        {{=A(board_id['title'],_href=URL('default', 'show_posts', args=board_id['id'])) }}</span>
+        <ul class="boardlist">
+
+        </ul>
+    </div>
+{{pass}}
+
+{{pass}}
+

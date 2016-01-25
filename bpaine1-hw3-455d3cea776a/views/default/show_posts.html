@@ -1,0 +1,35 @@
+{{extend 'layout.html'}}
+
+<h1>
+{{if auth.user_id != None:}}
+
+<a class="btn btn-success"  href="/hw3/default/show_boards">Go Back</a>
+
+{{=A('Create Post', _class='btn btn-success', _href=URL('default', 'add_posts', args=[post_board_id]))}}
+
+{{else:}}
+
+    <a class="btn btn-success"  href="/hw3/default/show_boards">Go Back</a>
+
+{{pass}}
+</h1>
+
+
+{{for post_id in post_list:}}
+    <div class = "myboard">
+        <span class="boardtitle">
+        {{=post_id['title']}}
+        {{if post_id.user_id == auth.user_id:}}
+
+        {{=A(icon_pencil, _href=URL('default', 'posts_edit', args=post_id['id']))}}
+        {{=A(icon_trash, _href=URL('default', 'delete_post', args=[post_id['id'], post_board_id]))}}
+        {{pass}}
+        </span>
+
+        <p>{{=(post_id['body'])}}</p>
+
+
+    </div>
+{{pass}}
+
+

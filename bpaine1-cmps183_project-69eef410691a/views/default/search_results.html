@@ -1,0 +1,162 @@
+{{extend 'layout.html'}}
+
+
+<div id="target"></div>
+
+            <style>
+        #suggestions {
+            position: relative;
+            /*padding: 20px;*/
+        }
+        .suggestions {
+            margin-top: 5px;
+            background: white;
+            width: 250px;
+        }
+        .search_list {
+            padding: 4px 6px 4px 6px;
+            word-wrap: break-word;
+        }
+    </style>
+
+
+<body class="cbp-spmenu-push my_body">
+
+
+
+<script id="template" type="text/ractive">
+{{=A('Back', _class='back_button', _href=URL('default', 'show_boards', args=[]))}}
+
+<!--shows the sign in sign out buttons-->
+        <h1 class="post_header">Search Posts</h1>
+
+
+       <div>
+
+
+  <form style="float:right" action="{{=URL('default', 'search_results')}}" method="post">
+      <input type="text" id="keyword" name="keyword" autocomplete="off" style="width: 250px;" />
+         <div style="position: absolute;" id="suggestions"
+              class="suggestions">
+      </div>
+
+        <input class="search_button" type="submit" value="Search">
+        <br>
+    {% count %}
+          {% #if count != 1%}
+          results
+          {% else %}
+          result
+          {%/if%}
+
+          returned.
+    </form>
+ </div>
+
+    <div class="pin_wrapper" style="margin-top: 100px;">
+    <div class="pin_columns">
+  {% #post_list %}
+    <div class = "pin" >
+        <div class="boardtitle hover_hand" on-click="go_to_post:{%id%}">
+            {% title %}
+        </div>
+        {% #if image%}
+         <img src="{{=URL('default', 'download')}}/{%image%}">
+        {%/if%}
+        <div class="boardbody">
+            Average Rating:
+            {% #star_dict[id]%}
+                <i style = "color: #ffad33" class = "fa fa-star"></i>
+            {% /star_dict %}
+
+
+            {% #if half_star_dict[id] %}
+                <span style=" margin-left: -4px;">
+                <i style = "color: #ffad33" class = "fa fa-star-half-o"></i>
+                </span>
+            {% /if %}
+
+
+            <span style=" margin-left: -4px;">
+            {% #anti_star_dict[id]%}
+                <i style = "color: #ffad33;" class = "fa fa-star-o"></i>
+            {% /star_dict %}
+
+            </span>
+            ({% avg_rate %})
+            <br>
+            <br>
+            Posted On: {% created_on %}
+            <br>
+            <br>
+
+        </div>
+    </div>
+  {% /post_list %}
+    </div>
+</div>
+</div>
+  </script>
+
+
+
+
+<script>
+
+
+$(function() {
+
+  // Ractive object
+  var MAIN = new Ractive({
+    el: '#target',
+    template: '#template',
+    delimiters: ['{%', '%}'],
+    tripleDelimiters: ['{%%', '%%}'],
+    data: {
+        post_list: [],
+        star_dict: {},
+        anti_star_dict: {},
+        half_star_dict: {},
+        loading: false,
+        count: 0
+    }
+  });
+
+  $("#keyword").keyup(function () {
+    ajax('{{=URL('default', 'post_selector')}}', ['keyword'], 'suggestions')
+    });
+
+
+  // Loads the initial list of posts.
+  $.ajax("{{=URL('default', 'load_search_results', user_signature=True, args=search_text)}}",
+          {
+            method: 'POST',
+            success: function (data) {
+                MAIN.set('post_list', data['post_list']);
+                MAIN.set('star_dict', data['star_dict']);
+                MAIN.set('anti_star_dict', data['anti_star_dict']);
+
+                MAIN.set('half_star_dict', data['half_star_dict']);
+
+                MAIN.set('count', data['count']);
+            }
+          }
+  );
+
+
+    //goes to the page for that post
+    MAIN.on("go_to_post", function(e, post_id, category){
+        window.location.href = '{{=URL('default', 'post_page')}}' + '/' + post_id + '/' + category;
+    });
+
+  // Called every 10s, checks for changes in posts and loads them
+  function periodic_load() {
+
+  }
+
+  setInterval(periodic_load, 10000);
+
+});
+</script>
+
+</body>
